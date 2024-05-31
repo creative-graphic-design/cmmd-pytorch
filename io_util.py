@@ -16,10 +16,11 @@
 """IO utilities."""
 
 import glob
-from torch.utils.data import Dataset, DataLoader
+
 import numpy as np
-from PIL import Image
 import tqdm
+from PIL import Image
+from torch.utils.data import DataLoader, Dataset
 
 
 class CMMDDataset(Dataset):
@@ -54,7 +55,9 @@ class CMMDDataset(Dataset):
         box = (left, top, left + l, top + l)
         im = im.crop(box)
         # Note that the following performs anti-aliasing as well.
-        return im.resize((size, size), resample=Image.BICUBIC)  # pytype: disable=module-attr
+        return im.resize(
+            (size, size), resample=Image.BICUBIC
+        )  # pytype: disable=module-attr
 
     def _read_image(self, path, size):
         im = Image.open(path)
@@ -94,7 +97,9 @@ def compute_embeddings_for_dir(
     Returns:
       Computed embeddings of shape (num_images, embedding_dim).
     """
-    dataset = CMMDDataset(img_dir, reshape_to=embedding_model.input_image_size, max_count=max_count)
+    dataset = CMMDDataset(
+        img_dir, reshape_to=embedding_model.input_image_size, max_count=max_count
+    )
     count = len(dataset)
     print(f"Calculating embeddings for {count} images from {img_dir}.")
 
@@ -109,7 +114,8 @@ def compute_embeddings_for_dir(
 
         if np.min(image_batch) < 0 or np.max(image_batch) > 1:
             raise ValueError(
-                "Image values are expected to be in [0, 1]. Found:" f" [{np.min(image_batch)}, {np.max(image_batch)}]."
+                "Image values are expected to be in [0, 1]. Found:"
+                f" [{np.min(image_batch)}, {np.max(image_batch)}]."
             )
 
         # Compute the embeddings using a pmapped function.

@@ -23,10 +23,16 @@ import io_util
 import numpy as np
 
 
-_BATCH_SIZE = flags.DEFINE_integer("batch_size", 32, "Batch size for embedding generation.")
-_MAX_COUNT = flags.DEFINE_integer("max_count", -1, "Maximum number of images to read from each directory.")
+_BATCH_SIZE = flags.DEFINE_integer(
+    "batch_size", 32, "Batch size for embedding generation."
+)
+_MAX_COUNT = flags.DEFINE_integer(
+    "max_count", -1, "Maximum number of images to read from each directory."
+)
 _REF_EMBED_FILE = flags.DEFINE_string(
-    "ref_embed_file", None, "Path to the pre-computed embedding file for the reference images."
+    "ref_embed_file",
+    None,
+    "Path to the pre-computed embedding file for the reference images.",
 )
 
 
@@ -46,15 +52,19 @@ def compute_cmmd(ref_dir, eval_dir, ref_embed_file=None, batch_size=32, max_coun
       The CMMD value between the image sets.
     """
     if ref_dir and ref_embed_file:
-        raise ValueError("`ref_dir` and `ref_embed_file` both cannot be set at the same time.")
+        raise ValueError(
+            "`ref_dir` and `ref_embed_file` both cannot be set at the same time."
+        )
     embedding_model = embedding.ClipEmbeddingModel()
     if ref_embed_file is not None:
         ref_embs = np.load(ref_embed_file).astype("float32")
     else:
-        ref_embs = io_util.compute_embeddings_for_dir(ref_dir, embedding_model, batch_size, max_count).astype(
-            "float32"
-        )
-    eval_embs = io_util.compute_embeddings_for_dir(eval_dir, embedding_model, batch_size, max_count).astype("float32")
+        ref_embs = io_util.compute_embeddings_for_dir(
+            ref_dir, embedding_model, batch_size, max_count
+        ).astype("float32")
+    eval_embs = io_util.compute_embeddings_for_dir(
+        eval_dir, embedding_model, batch_size, max_count
+    ).astype("float32")
     val = distance.mmd(ref_embs, eval_embs)
     return val.numpy()
 
