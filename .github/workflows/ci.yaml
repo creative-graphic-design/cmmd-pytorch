@@ -30,12 +30,14 @@ jobs:
 
       - name: Check the CLI
         run: |
+          source ~/.bashrc
+          
           if ! command -v cmmd-pytorch >/dev/null 2>&1; then
-            echo "Error: The command `cmmd-pytorch` is not available." >&2
+            echo "Error: The command 'cmmd-pytorch' is not available." >&2
             exit 1
           fi
       
-          echo "The command `cmmd-pytorch` is available."
+          echo "The command 'cmmd-pytorch' is available."
 
       - name: Format
         run: |
