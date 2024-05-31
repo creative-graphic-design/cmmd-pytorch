@@ -15,13 +15,12 @@
 
 """The main entry point for the CMMD calculation."""
 
-from absl import app
-from absl import flags
-import distance
-import embedding
-import io_util
 import numpy as np
+from absl import app, flags
 
+import cmmd.distance as distance
+import cmmd.embedding as embedding
+import cmmd.io_util as io_util
 
 _BATCH_SIZE = flags.DEFINE_integer(
     "batch_size", 32, "Batch size for embedding generation."
@@ -79,5 +78,5 @@ def main(argv):
     )
 
 
-if __name__ == "__main__":
+def run():
     app.run(main)
