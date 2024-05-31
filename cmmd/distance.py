@@ -15,6 +15,9 @@
 
 """Memory-efficient MMD implementation in JAX."""
 
+from typing import Union
+
+import numpy as np
 import torch
 
 # The bandwidth parameter for the Gaussian RBF kernel. See the paper for more
@@ -25,7 +28,9 @@ _SIGMA = 10
 _SCALE = 1000
 
 
-def mmd(x, y):
+def mmd(
+    x: Union[np.ndarray, torch.Tensor], y: Union[np.ndarray, torch.Tensor]
+) -> torch.Tensor:
     """Memory-efficient MMD implementation in JAX.
 
     This implements the minimum-variance/biased version of the estimator described

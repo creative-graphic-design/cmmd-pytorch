@@ -23,6 +23,8 @@ import tqdm
 from PIL import Image
 from torch.utils.data import DataLoader, Dataset
 
+from cmmd.embedding import ClipEmbeddingModel
+
 
 class CMMDDataset(Dataset):
     def __init__(self, path: os.PathLike, reshape_to, max_count=-1):
@@ -78,10 +80,10 @@ class CMMDDataset(Dataset):
 
 
 def compute_embeddings_for_dir(
-    img_dir,
-    embedding_model,
-    batch_size,
-    max_count=-1,
+    img_dir: os.PathLike,
+    embedding_model: ClipEmbeddingModel,
+    batch_size: int,
+    max_count: int = -1,
 ):
     """Computes embeddings for the images in the given directory.
 
