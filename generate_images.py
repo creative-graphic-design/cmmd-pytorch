@@ -29,7 +29,9 @@ def load_pipeline(args):
             args.pipeline_id, torch_dtype=torch.float16, safety_checker=None
         ).to("cuda")
     else:
-        pipeline = DiffusionPipeline.from_pretrained(args.pipeline_id, torch_dtype=torch.float16).to("cuda")
+        pipeline = DiffusionPipeline.from_pretrained(
+            args.pipeline_id, torch_dtype=torch.float16
+        ).to("cuda")
     pipeline.set_progress_bar_config(disable=True)
     return pipeline
 
@@ -60,7 +62,12 @@ def serialize_image(image, path):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--pipeline_id", default="runwayml/stable-diffusion-v1-5", type=str, choices=ALL_CKPTS)
+    parser.add_argument(
+        "--pipeline_id",
+        default="runwayml/stable-diffusion-v1-5",
+        type=str,
+        choices=ALL_CKPTS,
+    )
     parser.add_argument("--num_inference_steps", default=30, type=int)
     parser.add_argument("--chunk_size", default=2, type=int)
     parser.add_argument("--root_img_path", default="sdv15", type=str)
@@ -70,7 +77,9 @@ if __name__ == "__main__":
     dataset = load_dataframe()
     pipeline = load_pipeline(args)
     images = generate_images(args, dataset, pipeline)
-    image_paths = [os.path.join(args.root_img_path, f"{i}.jpg") for i in range(len(images))]
+    image_paths = [
+        os.path.join(args.root_img_path, f"{i}.jpg") for i in range(len(images))
+    ]
 
     if not os.path.exists(args.root_img_path):
         os.makedirs(args.root_img_path)

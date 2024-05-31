@@ -17,7 +17,6 @@
 
 from transformers import CLIPImageProcessor, CLIPVisionModelWithProjection
 import torch
-import numpy as np
 
 _CLIP_MODEL_NAME = "openai/clip-vit-large-patch14-336"
 _CUDA_AVAILABLE = torch.cuda.is_available()
@@ -36,7 +35,9 @@ class ClipEmbeddingModel:
     def __init__(self):
         self.image_processor = CLIPImageProcessor.from_pretrained(_CLIP_MODEL_NAME)
 
-        self._model = CLIPVisionModelWithProjection.from_pretrained(_CLIP_MODEL_NAME).eval()
+        self._model = CLIPVisionModelWithProjection.from_pretrained(
+            _CLIP_MODEL_NAME
+        ).eval()
         if _CUDA_AVAILABLE:
             self._model = self._model.cuda()
 
