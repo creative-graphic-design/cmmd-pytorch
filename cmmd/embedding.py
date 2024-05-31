@@ -15,18 +15,21 @@
 
 """Embedding models used in the CMMD calculation."""
 
-from transformers import CLIPImageProcessor, CLIPVisionModelWithProjection
+import numpy as np
 import torch
+from transformers import CLIPImageProcessor, CLIPVisionModelWithProjection
 
 _CLIP_MODEL_NAME = "openai/clip-vit-large-patch14-336"
 _CUDA_AVAILABLE = torch.cuda.is_available()
 
 
-def _resize_bicubic(images, size):
-    images = torch.from_numpy(images.transpose(0, 3, 1, 2))
-    images = torch.nn.functional.interpolate(images, size=(size, size), mode="bicubic")
-    images = images.permute(0, 2, 3, 1).numpy()
-    return images
+def _resize_bicubic(images: np.ndarray, size: int) -> torch.Tensor:
+    images_th = torch.from_numpy(images.transpose(0, 3, 1, 2))
+    images_th = torch.nn.functional.interpolate(
+        images_th, size=(size, size), mode="bicubic"
+    )
+    images_th = images_th.permute(0, 2, 3, 1).numpy()
+    return images_th
 
 
 class ClipEmbeddingModel:

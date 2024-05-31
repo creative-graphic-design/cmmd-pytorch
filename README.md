@@ -1,5 +1,7 @@
 # cmmd-pytorch
 
+[![CI](https://github.com/creative-graphic-design/cmmd-pytorch/actions/workflows/ci.yaml/badge.svg)](https://github.com/creative-graphic-design/cmmd-pytorch/actions/workflows/ci.yaml)
+
 (Unofficial) PyTorch implementation of CLIP Maximum Mean Discrepancy (CMMD) for evaluating image generation models, proposed in [Rethinking FID: Towards a Better Evaluation Metric for Image Generation](https://arxiv.org/abs/2401.09603). CMMD stands out to be a better metric than FID and tries to mitigate the longstanding issues of FID.
 
 This implementation is a super simple PyTorch port of the [original codebase](https://github.com/google-research/google-research/tree/master/cmmd). I have only focused on the JAX and TensorFlow specific bits and replaced them PyTorch. Some differences:
@@ -14,19 +16,39 @@ First, install PyTorch following instructions from the [official website](https:
 Then install the depdencies:
 
 ```bash
-pip install -r requirements.txt
+pip install git+https://github.com/creative-graphic-design/cmmd-pytorch
+```
+
+After installation, you will be able to use the command `cmmd-pytorch`:
+
+```shell
+❯❯❯ cmmd-pytorch --help
+usage: cmmd-pytorch [-h] [--batch-size BATCH_SIZE] [--max-count MAX_COUNT] [--ref-embed-file REF_EMBED_FILE] ref_dir eval_dir
+
+positional arguments:
+  ref_dir               Path to the directory containing reference images.
+  eval_dir              Path to the directory containing images to be evaluated.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --batch-size BATCH_SIZE
+                        Batch size for embedding generation.
+  --max-count MAX_COUNT
+                        Maximum number of images to read from each directory.
+  --ref-embed-file REF_EMBED_FILE
+                        Path to the pre-computed embedding file for the reference images.
 ```
 
 ## Running
 
 ```bash
-python main.py /path/to/reference/images /path/to/eval/images --batch_size=32 --max_count=30000
+cmmd-pytorch /path/to/reference/images /path/to/eval/images --batch_size=32 --max_count=30000
 ```
 
 A working example command:
 
 ```bash
-python main.py reference_images generated_images --batch_size=1
+cmmd-pytorch reference_images generated_images --batch_size=1
 ```
 
 It should output:
@@ -68,7 +90,7 @@ One can refer to the `generate_images.py` script that generates images from the 
 Once the images are generated, run:
 
 ```bash
-python main.py /path/to/reference/images /path/to/generated/images --batch_size=32 --max_count=30000
+cmmd-pytorch /path/to/reference/images /path/to/generated/images --batch_size=32 --max_count=30000
 ```
 
 Reference images are COCO-30k images and can be downloaded from [here](https://huggingface.co/datasets/sayakpaul/coco-30-val-2014).
@@ -78,7 +100,7 @@ Pre-computed embeddings for the COCO-30k images can be found [here](https://hugg
 To use the pre-computed reference embeddings, run:
 
 ```bash
-python main.py None /path/to/generated/images ref_embed_file=ref_embs.npy --batch_size=32 --max_count=30000
+cmmd-pytorch None /path/to/generated/images ref_embed_file=ref_embs.npy --batch_size=32 --max_count=30000
 ```
 
 ## Acknowledgements
