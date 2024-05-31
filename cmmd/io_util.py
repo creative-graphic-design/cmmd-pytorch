@@ -16,6 +16,7 @@
 """IO utilities."""
 
 import glob
+import os
 
 import numpy as np
 import tqdm
@@ -24,7 +25,7 @@ from torch.utils.data import DataLoader, Dataset
 
 
 class CMMDDataset(Dataset):
-    def __init__(self, path, reshape_to, max_count=-1):
+    def __init__(self, path: os.PathLike, reshape_to, max_count=-1):
         self.path = path
         self.reshape_to = reshape_to
 
